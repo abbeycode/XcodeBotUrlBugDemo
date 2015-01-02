@@ -15,7 +15,9 @@
 
 @implementation XcodeBotUrlBugDemoTests
 
-- (void)testBookmarks {
+- (void)testBookmarks
+{
+    // Create testing directory
     NSFileManager *fm = [NSFileManager defaultManager];
     NSString *sourceDir = [fm currentDirectoryPath];
     NSString *testingDir = [sourceDir stringByAppendingPathComponent:@"~testing dir"];
@@ -28,35 +30,21 @@
   withIntermediateDirectories:NO
                    attributes:nil
                         error:NULL];
-    
+
+    // Create file to create bookmark to
     NSString *bookmarkedFilePath = [testingDir stringByAppendingPathComponent:@"fileToBookmark.txt"];
     [fm createFileAtPath:bookmarkedFilePath
                 contents:nil
               attributes:nil];
-
     NSURL *originalURL = [NSURL fileURLWithPath:bookmarkedFilePath];
 
-//    NSError *appScopedBookmarkError = nil;
-//    NSData *appScopedBookmark = [originalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
-//                                      includingResourceValuesForKeys:nil
-//                                                       relativeToURL:nil
-//                                                               error:&appScopedBookmarkError];
-//    
-//    NSError *appScopedURLError = nil;
-//    BOOL isStale = NO;
-//    NSURL *url = [NSURL URLByResolvingBookmarkData:appScopedBookmark
-//                                           options:NSURLBookmarkResolutionWithSecurityScope
-//                                     relativeToURL:nil
-//                               bookmarkDataIsStale:&isStale
-//                                             error:&appScopedURLError];
-//    
-//    XCTAssertNil(appScopedURLError, @"Error while resolving app-scoped bookmark");
-    
+    // Create file to create bookmark relative to
     NSString *relativeFilePath = [testingDir stringByAppendingPathComponent:@"relativeToFile.txt"];
     [fm createFileAtPath:relativeFilePath
                 contents:nil
               attributes:nil];
 
+    // Create a document-scoped bookmark
     NSError *docScopedError = nil;
     NSURL *relativeToURL = [NSURL fileURLWithPath:relativeFilePath];
     NSData *bookmark = [originalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
@@ -64,6 +52,7 @@
                                               relativeToURL:relativeToURL
                                                       error:&docScopedError];
     
+    // Assert everything went well
     XCTAssertNil(docScopedError, @"Error while creating document-scoped bookmark from URL:\n%@\nrelative to: %@",
                  originalURL, relativeToURL);
     XCTAssertNotNil(bookmark, @"No bookmark created to URL:\n%@\nrelative to: %@",
