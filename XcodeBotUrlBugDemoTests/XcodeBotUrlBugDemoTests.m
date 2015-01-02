@@ -33,43 +33,41 @@
     [fm createFileAtPath:bookmarkedFilePath
                 contents:nil
               attributes:nil];
-    
-    NSError *error = nil;
+
     NSURL *originalURL = [NSURL fileURLWithPath:bookmarkedFilePath];
-    NSData *appScopedBookmark = [originalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
-                                      includingResourceValuesForKeys:nil
-                                                       relativeToURL:nil
-                                                               error:&error];
-    
-    NSError *docScopedError = nil;
-    BOOL isStale = NO;
-    NSURL *url = [NSURL URLByResolvingBookmarkData:appScopedBookmark
-                                           options:NSURLBookmarkResolutionWithSecurityScope
-                                     relativeToURL:nil
-                               bookmarkDataIsStale:&isStale
-                                             error:&docScopedError];
-    
-    XCTAssertNil(error, @"Error while resolving app-scoped bookmark");
+
+//    NSError *appScopedBookmarkError = nil;
+//    NSData *appScopedBookmark = [originalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+//                                      includingResourceValuesForKeys:nil
+//                                                       relativeToURL:nil
+//                                                               error:&appScopedBookmarkError];
+//    
+//    NSError *appScopedURLError = nil;
+//    BOOL isStale = NO;
+//    NSURL *url = [NSURL URLByResolvingBookmarkData:appScopedBookmark
+//                                           options:NSURLBookmarkResolutionWithSecurityScope
+//                                     relativeToURL:nil
+//                               bookmarkDataIsStale:&isStale
+//                                             error:&appScopedURLError];
+//    
+//    XCTAssertNil(appScopedURLError, @"Error while resolving app-scoped bookmark");
     
     NSString *relativeFilePath = [testingDir stringByAppendingPathComponent:@"relativeToFile.txt"];
     [fm createFileAtPath:relativeFilePath
                 contents:nil
               attributes:nil];
 
-//    [url startAccessingSecurityScopedResource];
-    
+    NSError *docScopedError = nil;
     NSURL *relativeToURL = [NSURL fileURLWithPath:relativeFilePath];
-    NSData *bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
-                     includingResourceValuesForKeys:nil
-                                      relativeToURL:relativeToURL
-                                              error:&docScopedError];
-    
-//    [url stopAccessingSecurityScopedResource];
+    NSData *bookmark = [originalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+                             includingResourceValuesForKeys:nil
+                                              relativeToURL:relativeToURL
+                                                      error:&docScopedError];
     
     XCTAssertNil(docScopedError, @"Error while creating document-scoped bookmark from URL:\n%@\nrelative to: %@",
-                 url, relativeToURL);
+                 originalURL, relativeToURL);
     XCTAssertNotNil(bookmark, @"No bookmark created to URL:\n%@\nrelative to: %@",
-                 url, relativeToURL);
+                 originalURL, relativeToURL);
 }
 
 @end
