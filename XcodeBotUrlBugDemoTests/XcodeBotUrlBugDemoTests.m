@@ -56,7 +56,7 @@
                 contents:nil
               attributes:nil];
 
-    [url startAccessingSecurityScopedResource];
+//    [url startAccessingSecurityScopedResource];
     
     NSURL *relativeToURL = [NSURL fileURLWithPath:relativeFilePath];
     NSData *bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
@@ -64,7 +64,7 @@
                                       relativeToURL:relativeToURL
                                               error:&docScopedError];
     
-    [url stopAccessingSecurityScopedResource];
+//    [url stopAccessingSecurityScopedResource];
     
     XCTAssertNil(docScopedError, @"Error while creating document-scoped bookmark from URL:\n%@\nrelative to: %@",
                  url, relativeToURL);
