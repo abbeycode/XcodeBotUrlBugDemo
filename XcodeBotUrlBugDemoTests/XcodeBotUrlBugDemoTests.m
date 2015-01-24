@@ -36,6 +36,9 @@
     [fm createFileAtPath:bookmarkedFilePath
                 contents:nil
               attributes:nil];
+    
+    XCTAssertTrue([fm fileExistsAtPath:bookmarkedFilePath], @"Failed to create %@", bookmarkedFilePath);
+    
     NSURL *originalURL = [NSURL fileURLWithPath:bookmarkedFilePath];
 
     // Create file to create bookmark relative to
@@ -43,6 +46,8 @@
     [fm createFileAtPath:relativeFilePath
                 contents:nil
               attributes:nil];
+    
+    XCTAssertTrue([fm fileExistsAtPath:relativeFilePath], @"Failed to create %@", relativeFilePath);
 
     // Create a document-scoped bookmark
     NSError *docScopedError = nil;
