@@ -22,7 +22,7 @@
 
     BOOL useHomeDir = [[[NSProcessInfo processInfo].environment objectForKey:@"UNIT_TEST_IN_HOME_DIR"] length] > 0;
     NSString *sourceDir = [fm currentDirectoryPath];
-    NSString *testingDirPath = [(useHomeDir ? @"~" : sourceDir) stringByAppendingPathComponent:@"~testing dir"];
+    NSString *testingDirPath = [(useHomeDir ? NSHomeDirectory() : sourceDir) stringByAppendingPathComponent:@"~testing dir"];
     
     NSLog(@"Using test directory: %@", testingDirPath);
     
