@@ -83,8 +83,8 @@
       </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "UNIT_TEST_IN_HOME_DIR"
-            value = "YES"
+            key = "UNIT_TESTING_DIR"
+            value = "/Users/Shared/~Unit Testing Temp"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

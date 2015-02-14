@@ -20,9 +20,9 @@
     // Create testing directory
     NSFileManager *fm = [NSFileManager defaultManager];
 
-    BOOL useHomeDir = [[[NSProcessInfo processInfo].environment objectForKey:@"UNIT_TEST_IN_HOME_DIR"] length] > 0;
-    NSString *sourceDir = [fm currentDirectoryPath];
-    NSString *testingDirPath = [(useHomeDir ? NSHomeDirectory() : sourceDir) stringByAppendingPathComponent:@"~testing dir"];
+    NSString *envVarTestingDir = [[NSProcessInfo processInfo].environment objectForKey:@"UNIT_TESTING_DIR"];
+    NSString *sourceRelativeDir = [[fm currentDirectoryPath] stringByAppendingPathComponent:@"~testing dir"];
+    NSString *testingDirPath = [envVarTestingDir length] > 0 ? envVarTestingDir : sourceRelativeDir;
     
     NSLog(@"Using test directory: %@", testingDirPath);
     
@@ -30,10 +30,13 @@
         [fm removeItemAtPath:testingDirPath error:NULL];
     }
     
+    NSError *createDirectoryError = nil;
     [fm createDirectoryAtPath:testingDirPath
   withIntermediateDirectories:YES
                    attributes:nil
-                        error:NULL];
+                        error:&createDirectoryError];
+    
+    XCTAssertNil(createDirectoryError, @"Error creating unit testing temp directory");
 
     // Create file to create bookmark to
     NSString *bookmarkedFilePath = [testingDirPath stringByAppendingPathComponent:@"fileToBookmark.txt"];
