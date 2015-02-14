@@ -19,20 +19,24 @@
 {
     // Create testing directory
     NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *sourceDir = [fm currentDirectoryPath];
-    NSString *testingDir = [sourceDir stringByAppendingPathComponent:@"~testing dir"];
 
-    if ([fm fileExistsAtPath:testingDir]) {
-        [fm removeItemAtPath:testingDir error:NULL];
+    BOOL useHomeDir = [[[NSProcessInfo processInfo].environment objectForKey:@"UNIT_TEST_IN_HOME_DIR"] length] > 0;
+    NSString *sourceDir = [fm currentDirectoryPath];
+    NSString *testingDirPath = [(useHomeDir ? @"~" : sourceDir) stringByAppendingPathComponent:@"~testing dir"];
+    
+    NSLog(@"Using test directory: %@", testingDirPath);
+    
+    if ([fm fileExistsAtPath:testingDirPath]) {
+        [fm removeItemAtPath:testingDirPath error:NULL];
     }
     
-    [fm createDirectoryAtPath:testingDir
-  withIntermediateDirectories:NO
+    [fm createDirectoryAtPath:testingDirPath
+  withIntermediateDirectories:YES
                    attributes:nil
                         error:NULL];
 
     // Create file to create bookmark to
-    NSString *bookmarkedFilePath = [testingDir stringByAppendingPathComponent:@"fileToBookmark.txt"];
+    NSString *bookmarkedFilePath = [testingDirPath stringByAppendingPathComponent:@"fileToBookmark.txt"];
     [fm createFileAtPath:bookmarkedFilePath
                 contents:nil
               attributes:nil];
@@ -42,7 +46,7 @@
     NSURL *originalURL = [NSURL fileURLWithPath:bookmarkedFilePath];
 
     // Create file to create bookmark relative to
-    NSString *relativeFilePath = [testingDir stringByAppendingPathComponent:@"relativeToFile.txt"];
+    NSString *relativeFilePath = [testingDirPath stringByAppendingPathComponent:@"relativeToFile.txt"];
     [fm createFileAtPath:relativeFilePath
                 contents:nil
               attributes:nil];
